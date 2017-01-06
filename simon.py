@@ -72,6 +72,7 @@ class Game(object):
             led.on()
             time.sleep(1)
             led.off()
+            time.sleep(.1)
 
     def get_inputs(self):
         while True:
