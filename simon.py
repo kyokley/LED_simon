@@ -78,8 +78,10 @@ class Game(object):
             for button in self.buttons:
                 if button.status():
                     self.button_dict[button].on()
-                    yield button
+                    while button.status():
+                        time.sleep(.1)
                     self.button_dict[button].off()
+                    yield button
             time.sleep(.1)
 
     def game_over(self):
@@ -91,6 +93,8 @@ class Game(object):
 
             for led in self.leds:
                 led.off()
+
+            time.sleep(.25)
 
         self.done = True
 
