@@ -98,6 +98,7 @@ class Game(object):
             time.sleep(.25)
 
         self.done = True
+        time.sleep(1)
 
     def check_input(self):
         inputs = self.get_inputs()
@@ -123,8 +124,9 @@ def main():
                    red_button,
                    blue_button)
 
-    game = Game(ALL_LEDS, ALL_BUTTONS)
-    game.run()
+    while True:
+        game = Game(ALL_LEDS, ALL_BUTTONS)
+        game.run()
 
 if __name__ == '__main__':
     main()
