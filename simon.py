@@ -70,13 +70,12 @@ class Button(object):
         return not bool(self._pi.read(self.pin))
 
 class Game(object):
-    def __init__(self, leds, buttons, buzzer):
+    def __init__(self, leds, buttons):
         self.seq = []
         self.leds = leds
         self.buttons = buttons
         self.led_dict = dict(zip(leds, buttons))
         self.button_dict = dict(zip(buttons, leds))
-        self.buzzer = buzzer
         self.done = False
 
     def run(self):
