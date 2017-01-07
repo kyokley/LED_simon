@@ -28,19 +28,19 @@ class Buzzer(object):
         pi.hardware_PWM(BUZZER_PIN, 0, 0)
 
     @staticmethod
-    def play0(self):
+    def play0():
         pi.hardware_PWM(BUZZER_PIN, FREQ0, DUTY_CYCLE * 1.5)
 
     @staticmethod
-    def play1(self):
+    def play1():
         pi.hardware_PWM(BUZZER_PIN, FREQ1, DUTY_CYCLE)
 
     @staticmethod
-    def play2(self):
+    def play2():
         pi.hardware_PWM(BUZZER_PIN, FREQ2, DUTY_CYCLE)
 
     @staticmethod
-    def play3(self):
+    def play3():
         pi.hardware_PWM(BUZZER_PIN, FREQ3, DUTY_CYCLE)
 
 
