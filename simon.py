@@ -10,19 +10,54 @@ GREEN_BUTTON_PIN = 24
 RED_BUTTON_PIN = 25
 BLUE_BUTTON_PIN = 12
 
+BUZZER_PIN = 18
+DUTY_CYCLE = 8000
+
+FREQ0 = 800
+FREQ1 = 1200
+FREQ2 = 1600
+FREQ3 = 2000
+
 pi = pigpio.pi()
 
+pi.set_mode(BUZZER_PIN, pigpio.OUTPUT)
+class Buzzer(object):
+
+    @staticmethod
+    def stop():
+        pi.hardware_PWM(BUZZER_PIN, 0, 0)
+
+    @staticmethod
+    def play0(self):
+        pi.hardware_PWM(BUZZER_PIN, FREQ0, DUTY_CYCLE * 1.5)
+
+    @staticmethod
+    def play1(self):
+        pi.hardware_PWM(BUZZER_PIN, FREQ1, DUTY_CYCLE)
+
+    @staticmethod
+    def play2(self):
+        pi.hardware_PWM(BUZZER_PIN, FREQ2, DUTY_CYCLE)
+
+    @staticmethod
+    def play3(self):
+        pi.hardware_PWM(BUZZER_PIN, FREQ3, DUTY_CYCLE)
+
+
 class Led(object):
-    def __init__(self, pin):
+    def __init__(self, pin, sound):
         self.pin = pin
         self._pi = pi
         self._pi.set_mode(self.pin, pigpio.OUTPUT)
+        self.sound = sound
 
     def on(self):
         self._pi.write(self.pin, 1)
+        self.sound()
 
     def off(self):
         self._pi.write(self.pin, 0)
+        Buzzer.stop()
 
 class Button(object):
     def __init__(self, pin):
@@ -34,29 +69,14 @@ class Button(object):
     def status(self):
         return not bool(self._pi.read(self.pin))
 
-def test_leds():
-    green_led = Led(GREEN_PIN)
-    red_led = Led(RED_PIN)
-    blue_led = Led(BLUE_PIN)
-
-    ALL_LEDS = (green_led, red_led, blue_led)
-    try:
-        while True:
-            for led in ALL_LEDS:
-                func = random.choice([led.on, led.off])
-                func()
-                time.sleep(.1)
-    except KeyboardInterrupt:
-        for led in ALL_LEDS:
-            led.off()
-
 class Game(object):
-    def __init__(self, leds, buttons):
+    def __init__(self, leds, buttons, buzzer):
         self.seq = []
         self.leds = leds
         self.buttons = buttons
         self.led_dict = dict(zip(leds, buttons))
         self.button_dict = dict(zip(buttons, leds))
+        self.buzzer = buzzer
         self.done = False
 
     def run(self):
@@ -89,6 +109,7 @@ class Game(object):
         for i in xrange(5):
             for led in self.leds:
                 led.on()
+            Buzzer.play0()
 
             time.sleep(.25)
 
@@ -110,9 +131,9 @@ class Game(object):
                 break
 
 def main():
-    green_led = Led(GREEN_PIN)
-    red_led = Led(RED_PIN)
-    blue_led = Led(BLUE_PIN)
+    green_led = Led(GREEN_PIN, Buzzer.play1)
+    red_led = Led(RED_PIN, Buzzer.play2)
+    blue_led = Led(BLUE_PIN, Buzzer.play3)
 
     ALL_LEDS = (green_led, red_led, blue_led)
 
